@@ -4,7 +4,7 @@
 import os
 import re
 import subprocess
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 from fontTools.fontBuilder import FontBuilder
@@ -20,6 +20,80 @@ UNITS_PER_EM = 1000
 ASCENDER = 800
 DESCENDER = -200
 CAP_HEIGHT = 700
+
+_pil_font = None
+
+
+def _get_font(font_size: int = 60):
+    """Get or create cached PIL font for worker processes."""
+    global _pil_font
+    if _pil_font is not None:
+        return _pil_font
+
+    fonts_to_try = [
+        "/System/Library/Fonts/Helvetica.ttc",
+        "/System/Library/Fonts/SFNSMono.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/TTF/DejaVuSans.ttf",
+    ]
+
+    for font_path in fonts_to_try:
+        try:
+            _pil_font = ImageFont.truetype(font_path, font_size)
+            return _pil_font
+        except OSError:
+            continue
+
+    _pil_font = ImageFont.load_default()
+    return _pil_font
+
+
+def render_glyph(glyph_name: str, gloss: str) -> tuple[str, bytes, int]:
+    """Render a single glyph (worker function). Returns (glyph_name, charstring, width)."""
+    pil_font = _get_font()
+    target_height = 600
+
+    bbox = pil_font.getbbox(gloss)
+    text_width = bbox[2] - bbox[0]
+    text_height = bbox[3] - bbox[1]
+
+    padding = 10
+    img_width = text_width + padding * 2
+    img_height = text_height + padding * 2
+
+    img = Image.new("L", (img_width, img_height), 0)
+    draw = ImageDraw.Draw(img)
+    draw.text((padding - bbox[0], padding - bbox[1]), gloss, font=pil_font, fill=255)
+
+    scale = target_height / img_height
+    scaled_width = int(img_width * scale)
+
+    threshold = 128
+    contours = []
+
+    for y in range(img.height):
+        row_start = None
+        for x in range(img.width + 1):
+            pixel = img.getpixel((x, y)) if x < img.width else 0
+            if pixel >= threshold and row_start is None:
+                row_start = x
+            elif pixel < threshold and row_start is not None:
+                x1 = int(row_start * scale)
+                x2 = int(x * scale)
+                y1 = int((img.height - y - 1) * scale) + 100
+                y2 = int((img.height - y) * scale) + 100
+                contours.append((x1, y1, x2, y2))
+                row_start = None
+
+    pen = T2CharStringPen(scaled_width, None)
+    for x1, y1, x2, y2 in contours:
+        pen.moveTo((x1, y1))
+        pen.lineTo((x2, y1))
+        pen.lineTo((x2, y2))
+        pen.lineTo((x1, y2))
+        pen.closePath()
+
+    return glyph_name, pen.getCharString(), scaled_width
 
 
 def download_cedict():
@@ -293,7 +367,6 @@ def build_font():
     char_glosses, ligatures = parse_cedict()
     print(f"Found {len(char_glosses)} single characters and {len(ligatures)} compounds")
 
-    print("Building glyphs...")
     glyph_names = [".notdef", "space"]
     char_strings = {}
     widths = {".notdef": 500, "space": 250}
@@ -302,52 +375,72 @@ def build_font():
     char_strings[".notdef"] = create_notdef_charstring()
     char_strings["space"] = create_space_charstring()
 
-    # Build single character glyphs FIRST (ligatures need them in cmap)
-    processed = 0
+    # Prepare work items for characters
+    char_work = []
+    seen_glyph_names = set()
     for char, gloss in char_glosses.items():
         codepoint = ord(char)
         glyph_name = f"u{codepoint:04X}"
-        if glyph_name in char_strings:
+        if glyph_name in seen_glyph_names:
             continue
-        glyph_names.append(glyph_name)
-
-        img, img_w, img_h = text_to_outline(gloss)
-        charstring, width = image_to_charstring(img, img_w, img_h)
-        char_strings[glyph_name] = charstring
-        widths[glyph_name] = width
+        seen_glyph_names.add(glyph_name)
+        char_work.append((glyph_name, gloss, codepoint))
         cmap[codepoint] = glyph_name
 
-        processed += 1
-        if processed % 1000 == 0:
-            print(f"  Processed {processed} characters...")
-
-    print(f"  Built {len(cmap) - 1} character glyphs")
-
-    # Now build ligature glyphs (component chars are now in cmap)
+    # Prepare work items for ligatures (filter to those with all chars present)
+    ligature_work = []
     ligature_glyph_map = {}
-    processed = 0
-
     for chars, gloss in ligatures.items():
-        # Skip ligatures where component characters aren't in font
         if not all(ord(c) in cmap for c in chars):
             continue
-
         glyph_name = "lig_" + "_".join(f"u{ord(c):04X}" for c in chars)
-        if glyph_name in char_strings:
+        if glyph_name in seen_glyph_names:
             continue
-        glyph_names.append(glyph_name)
+        seen_glyph_names.add(glyph_name)
+        ligature_work.append((glyph_name, gloss, chars))
 
-        img, img_w, img_h = text_to_outline(gloss)
-        charstring, width = image_to_charstring(img, img_w, img_h)
-        char_strings[glyph_name] = charstring
-        widths[glyph_name] = width
-        ligature_glyph_map[chars] = glyph_name
+    total_work = len(char_work) + len(ligature_work)
+    num_workers = os.cpu_count() or 4
+    print(f"Building {total_work} glyphs using {num_workers} workers...")
 
-        processed += 1
-        if processed % 5000 == 0:
-            print(f"  Processed {processed} ligatures...")
+    completed = 0
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        # Submit character work
+        char_futures = {
+            executor.submit(render_glyph, gn, gl): cp
+            for gn, gl, cp in char_work
+        }
 
-    print(f"  Built {len(ligature_glyph_map)} ligature glyphs")
+        # Submit ligature work
+        lig_futures = {
+            executor.submit(render_glyph, gn, gl): chars
+            for gn, gl, chars in ligature_work
+        }
+
+        # Process character results
+        for future in as_completed(char_futures):
+            codepoint = char_futures[future]
+            glyph_name, charstring, width = future.result()
+            glyph_names.append(glyph_name)
+            char_strings[glyph_name] = charstring
+            widths[glyph_name] = width
+            completed += 1
+            if completed % 10000 == 0:
+                print(f"  {completed}/{total_work} glyphs...")
+
+        # Process ligature results
+        for future in as_completed(lig_futures):
+            chars = lig_futures[future]
+            glyph_name, charstring, width = future.result()
+            glyph_names.append(glyph_name)
+            char_strings[glyph_name] = charstring
+            widths[glyph_name] = width
+            ligature_glyph_map[chars] = glyph_name
+            completed += 1
+            if completed % 10000 == 0:
+                print(f"  {completed}/{total_work} glyphs...")
+
+    print(f"  Built {len(cmap) - 1} characters + {len(ligature_glyph_map)} ligatures")
 
     print("Assembling font...")
     fb = FontBuilder(UNITS_PER_EM, isTTF=False)
