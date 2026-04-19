@@ -20,6 +20,7 @@ Type Chinese text and see it rendered with English glosses in real-time.
 ### Generate the font
 
 ```bash
+uv sync
 uv run python generate_font.py
 ```
 
