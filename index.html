@@ -17,129 +17,178 @@
         }
 
         body {
-            font-family: system-ui, -apple-system, sans-serif;
-            max-width: 900px;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 2rem;
-            background: #fafafa;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             color: #333;
             line-height: 1.6;
         }
 
+        .container {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
         h1 {
-            font-size: 1.8rem;
+            font-size: 2.5rem;
             margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .subtitle {
             color: #666;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
         }
 
         .literal-font {
             font-family: 'Literal Chinese', system-ui, sans-serif;
-            font-size: 1.5rem;
-            line-height: 2;
-            letter-spacing: 0.1em;
+            font-size: 3rem;
+            line-height: 1.8;
+            letter-spacing: 0.15em;
         }
 
         section {
-            background: white;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
         }
 
         h2 {
-            font-size: 1rem;
+            font-size: 0.875rem;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: #888;
+            letter-spacing: 0.15em;
+            color: #64748b;
             margin-top: 0;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
         }
 
         .example {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .example:last-child {
             margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
         }
 
         .original {
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
+            color: #334155;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
         }
 
         .translated {
-            background: #f5f5f5;
-            padding: 1rem;
-            border-radius: 4px;
-            border-left: 3px solid #333;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
         }
 
         textarea {
             width: 100%;
-            padding: 1rem;
-            font-size: 1.2rem;
-            border: 2px solid #ddd;
-            border-radius: 4px;
+            padding: 1.25rem;
+            font-size: 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
             resize: vertical;
             min-height: 100px;
             font-family: system-ui, sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         textarea:focus {
             outline: none;
-            border-color: #333;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
         #output {
             margin-top: 1rem;
-            background: #f5f5f5;
+            background: white;
             padding: 1.5rem;
-            border-radius: 4px;
-            min-height: 80px;
-            border-left: 3px solid #333;
+            border-radius: 8px;
+            min-height: 100px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
         }
 
         .note {
-            font-size: 0.85rem;
-            color: #888;
-            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #94a3b8;
+            margin-top: 0.75rem;
         }
 
         .legend {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem 1.5rem;
-            font-size: 0.9rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            background: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
         }
 
         .legend-char {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #334155;
         }
 
         .legend-arrow {
-            color: #999;
+            color: #cbd5e1;
         }
 
         .legend-gloss {
             font-family: 'Literal Chinese', system-ui;
-            font-size: 1.1rem;
+            font-size: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.75rem;
+            }
+            .literal-font {
+                font-size: 2rem;
+            }
+            .legend {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="container">
     <h1>Literal Chinese Font</h1>
     <p class="subtitle">A font that replaces Chinese characters with their English meanings</p>
 
@@ -241,5 +290,6 @@
         input.addEventListener('input', updateOutput);
         updateOutput();
     </script>
+    </div>
 </body>
 </html>
