@@ -1,0 +1,10 @@
+[project]
+name = "chinese-font"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fonttools>=4.62.1",
+    "pillow>=12.2.0",
+]

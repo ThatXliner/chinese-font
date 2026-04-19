@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Literal Chinese Font</title>
+    <style>
+        @font-face {
+            font-family: 'Literal Chinese';
+            src: url('literal_chinese.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #fafafa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .literal-font {
+            font-family: 'Literal Chinese', system-ui, sans-serif;
+            font-size: 1.5rem;
+            line-height: 2;
+            letter-spacing: 0.1em;
+        }
+
+        section {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #888;
+            margin-top: 0;
+            margin-bottom: 1rem;
+        }
+
+        .example {
+            margin-bottom: 1.5rem;
+        }
+
+        .example:last-child {
+            margin-bottom: 0;
+        }
+
+        .original {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .translated {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 3px solid #333;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 100px;
+            font-family: system-ui, sans-serif;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #333;
+        }
+
+        #output {
+            margin-top: 1rem;
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 4px;
+            min-height: 80px;
+            border-left: 3px solid #333;
+        }
+
+        .note {
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-char {
+            font-size: 1.1rem;
+        }
+
+        .legend-arrow {
+            color: #999;
+        }
+
+        .legend-gloss {
+            font-family: 'Literal Chinese', system-ui;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Literal Chinese Font</h1>
+    <p class="subtitle">A font that replaces Chinese characters with their English meanings</p>
+
+    <section>
+        <h2>Example Sentences</h2>
+
+        <div class="example">
+            <div class="original">我去图书馆看书。</div>
+            <div class="translated literal-font">我去图书馆看书。</div>
+        </div>
+
+        <div class="example">
+            <div class="original">火山在日本很多。</div>
+            <div class="translated literal-font">火山在日本很多。</div>
+        </div>
+
+        <div class="example">
+            <div class="original">北京和上海是中国大城市。</div>
+            <div class="translated literal-font">北京和上海是中国大城市。</div>
+        </div>
+
+        <div class="example">
+            <div class="original">学生在大学学中文。</div>
+            <div class="translated literal-font">学生在大学学中文。</div>
+        </div>
+
+        <div class="example">
+            <div class="original">我的朋友喜欢山水画。</div>
+            <div class="translated literal-font">我的朋友喜欢山水画。</div>
+        </div>
+
+        <div class="example">
+            <div class="original">父母爱子女，子女爱父母。</div>
+            <div class="translated literal-font">父母爱子女，子女爱父母。</div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Ligature Examples</h2>
+        <p class="note">These compound words are rendered as single glosses:</p>
+        <div class="legend">
+            <div class="legend-item"><span class="legend-char">火山</span> <span class="legend-arrow">→</span> <span class="legend-gloss">火山</span></div>
+            <div class="legend-item"><span class="legend-char">日本</span> <span class="legend-arrow">→</span> <span class="legend-gloss">日本</span></div>
+            <div class="legend-item"><span class="legend-char">图书馆</span> <span class="legend-arrow">→</span> <span class="legend-gloss">图书馆</span></div>
+            <div class="legend-item"><span class="legend-char">电话</span> <span class="legend-arrow">→</span> <span class="legend-gloss">电话</span></div>
+            <div class="legend-item"><span class="legend-char">中文</span> <span class="legend-arrow">→</span> <span class="legend-gloss">中文</span></div>
+            <div class="legend-item"><span class="legend-char">北京</span> <span class="legend-arrow">→</span> <span class="legend-gloss">北京</span></div>
+            <div class="legend-item"><span class="legend-char">上海</span> <span class="legend-arrow">→</span> <span class="legend-gloss">上海</span></div>
+            <div class="legend-item"><span class="legend-char">大学</span> <span class="legend-arrow">→</span> <span class="legend-gloss">大学</span></div>
+            <div class="legend-item"><span class="legend-char">学生</span> <span class="legend-arrow">→</span> <span class="legend-gloss">学生</span></div>
+            <div class="legend-item"><span class="legend-char">朋友</span> <span class="legend-arrow">→</span> <span class="legend-gloss">朋友</span></div>
+            <div class="legend-item"><span class="legend-char">山水</span> <span class="legend-arrow">→</span> <span class="legend-gloss">山水</span></div>
+            <div class="legend-item"><span class="legend-char">父母</span> <span class="legend-arrow">→</span> <span class="legend-gloss">父母</span></div>
+        </div>
+    </section>
+
+    <section>
+        <h2>Try It Yourself</h2>
+        <textarea id="input" placeholder="Type Chinese text here...">人山人海，天上有日月。</textarea>
+        <div id="output" class="literal-font"></div>
+        <p class="note">Unsupported characters will display as-is.</p>
+    </section>
+
+    <section>
+        <h2>Supported Characters</h2>
+        <div class="legend">
+            <div class="legend-item"><span class="legend-char">人</span> <span class="legend-arrow">→</span> <span class="legend-gloss">人</span></div>
+            <div class="legend-item"><span class="legend-char">山</span> <span class="legend-arrow">→</span> <span class="legend-gloss">山</span></div>
+            <div class="legend-item"><span class="legend-char">火</span> <span class="legend-arrow">→</span> <span class="legend-gloss">火</span></div>
+            <div class="legend-item"><span class="legend-char">水</span> <span class="legend-arrow">→</span> <span class="legend-gloss">水</span></div>
+            <div class="legend-item"><span class="legend-char">日</span> <span class="legend-arrow">→</span> <span class="legend-gloss">日</span></div>
+            <div class="legend-item"><span class="legend-char">月</span> <span class="legend-arrow">→</span> <span class="legend-gloss">月</span></div>
+            <div class="legend-item"><span class="legend-char">木</span> <span class="legend-arrow">→</span> <span class="legend-gloss">木</span></div>
+            <div class="legend-item"><span class="legend-char">口</span> <span class="legend-arrow">→</span> <span class="legend-gloss">口</span></div>
+            <div class="legend-item"><span class="legend-char">手</span> <span class="legend-arrow">→</span> <span class="legend-gloss">手</span></div>
+            <div class="legend-item"><span class="legend-char">心</span> <span class="legend-arrow">→</span> <span class="legend-gloss">心</span></div>
+            <div class="legend-item"><span class="legend-char">天</span> <span class="legend-arrow">→</span> <span class="legend-gloss">天</span></div>
+            <div class="legend-item"><span class="legend-char">地</span> <span class="legend-arrow">→</span> <span class="legend-gloss">地</span></div>
+            <div class="legend-item"><span class="legend-char">风</span> <span class="legend-arrow">→</span> <span class="legend-gloss">风</span></div>
+            <div class="legend-item"><span class="legend-char">雨</span> <span class="legend-arrow">→</span> <span class="legend-gloss">雨</span></div>
+            <div class="legend-item"><span class="legend-char">云</span> <span class="legend-arrow">→</span> <span class="legend-gloss">云</span></div>
+            <div class="legend-item"><span class="legend-char">大</span> <span class="legend-arrow">→</span> <span class="legend-gloss">大</span></div>
+            <div class="legend-item"><span class="legend-char">小</span> <span class="legend-arrow">→</span> <span class="legend-gloss">小</span></div>
+            <div class="legend-item"><span class="legend-char">上</span> <span class="legend-arrow">→</span> <span class="legend-gloss">上</span></div>
+            <div class="legend-item"><span class="legend-char">下</span> <span class="legend-arrow">→</span> <span class="legend-gloss">下</span></div>
+            <div class="legend-item"><span class="legend-char">中</span> <span class="legend-arrow">→</span> <span class="legend-gloss">中</span></div>
+        </div>
+        <p class="note">...and 76 more characters</p>
+    </section>
+
+    <script>
+        const input = document.getElementById('input');
+        const output = document.getElementById('output');
+
+        function updateOutput() {
+            output.textContent = input.value;
+        }
+
+        input.addEventListener('input', updateOutput);
+        updateOutput();
+    </script>
+</body>
+</html>
