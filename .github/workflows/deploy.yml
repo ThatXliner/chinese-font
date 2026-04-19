@@ -20,11 +20,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v5
+      # - name: Install uv
+      #   uses: astral-sh/setup-uv@v5
 
-      - name: Generate font
-        run: uv run python generate_font.py
+      # - name: Generate font
+      #   run: uv run python generate_font.py
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

@@ -15,6 +15,11 @@ from PIL import Image, ImageDraw, ImageFont
 
 CEDICT_URL = "https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz"
 CEDICT_FILE = Path("cedict.txt")
+FREQUENCY_URL = "https://raw.githubusercontent.com/ruddfawcett/hanziDB.csv/master/hanzi_db.csv"
+FREQUENCY_FILE = Path("hanzi_db.csv")
+
+# Max glyphs must be under 65535 (OpenType limit)
+MAX_GLYPHS = 60000
 
 UNITS_PER_EM = 1000
 ASCENDER = 800
@@ -108,8 +113,45 @@ def download_cedict():
     )
 
 
-def parse_cedict() -> tuple[dict[str, str], dict[tuple[str, ...], str]]:
-    """Parse CC-CEDICT and return single-char glosses and multi-char ligatures."""
+def download_frequency_data():
+    """Download frequency data if not present."""
+    if FREQUENCY_FILE.exists():
+        return
+    print("Downloading frequency data...")
+    subprocess.run(
+        f'curl -sL "{FREQUENCY_URL}" -o {FREQUENCY_FILE}',
+        shell=True,
+        check=True,
+    )
+
+
+def load_frequency_data() -> dict[str, int]:
+    """Load character frequency ranks from hanzi_db.csv. Lower rank = more common."""
+    download_frequency_data()
+
+    freq = {}
+    if not FREQUENCY_FILE.exists():
+        print(f"Warning: {FREQUENCY_FILE} not found, skipping frequency filtering")
+        return freq
+
+    with open(FREQUENCY_FILE, encoding="utf-8") as f:
+        next(f)  # skip header
+        for line in f:
+            parts = line.strip().split(",")
+            if len(parts) >= 2:
+                rank = int(parts[0])
+                char = parts[1]
+                freq[char] = rank
+    return freq
+
+
+def parse_cedict(
+    freq_data: dict[str, int],
+) -> tuple[dict[str, str], dict[tuple[str, ...], str]]:
+    """Parse CC-CEDICT and return single-char glosses and multi-char ligatures.
+
+    Characters are filtered and sorted by frequency if freq_data is provided.
+    """
     single_chars: dict[str, str] = {}
     ligatures: dict[tuple[str, ...], str] = {}
 
@@ -132,12 +174,31 @@ def parse_cedict() -> tuple[dict[str, str], dict[tuple[str, ...], str]]:
 
             for chars in [simplified, traditional]:
                 if len(chars) == 1:
+                    # Only include characters in our frequency list (if we have one)
+                    if freq_data and chars not in freq_data:
+                        continue
                     if chars not in single_chars:
                         single_chars[chars] = gloss
                 else:
+                    # For ligatures, all component chars must be in frequency list
+                    if freq_data and not all(c in freq_data for c in chars):
+                        continue
                     key = tuple(chars)
                     if key not in ligatures:
                         ligatures[key] = gloss
+
+    # Sort single chars by frequency (most common first)
+    if freq_data:
+        single_chars = dict(
+            sorted(single_chars.items(), key=lambda x: freq_data.get(x[0], 999999))
+        )
+        # Sort ligatures by average frequency of component chars
+        ligatures = dict(
+            sorted(
+                ligatures.items(),
+                key=lambda x: sum(freq_data.get(c, 999999) for c in x[0]) / len(x[0]),
+            )
+        )
 
     return single_chars, ligatures
 
@@ -363,9 +424,29 @@ def build_font():
     """Build the literal Chinese font."""
     download_cedict()
 
+    print("Loading frequency data...")
+    freq_data = load_frequency_data()
+    if freq_data:
+        print(f"Loaded {len(freq_data)} character frequencies")
+
     print("Parsing CC-CEDICT...")
-    char_glosses, ligatures = parse_cedict()
+    char_glosses, ligatures = parse_cedict(freq_data)
     print(f"Found {len(char_glosses)} single characters and {len(ligatures)} compounds")
+
+    # Limit total glyphs to stay under OpenType's 65535 limit
+    total_available = len(char_glosses) + len(ligatures) + 2  # +2 for .notdef and space
+    if total_available > MAX_GLYPHS:
+        # Prioritize single characters over ligatures, then truncate ligatures
+        max_ligatures = MAX_GLYPHS - len(char_glosses) - 2
+        if max_ligatures < 0:
+            # Even chars alone exceed limit - truncate chars too
+            char_glosses = dict(list(char_glosses.items())[:MAX_GLYPHS - 2])
+            ligatures = {}
+            print(f"Truncated to {len(char_glosses)} characters (OpenType limit)")
+        else:
+            # Truncate ligatures to fit
+            ligatures = dict(list(ligatures.items())[:max_ligatures])
+            print(f"Truncated to {len(char_glosses)} chars + {len(ligatures)} ligatures (OpenType limit)")
 
     glyph_names = [".notdef", "space"]
     char_strings = {}
