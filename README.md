@@ -10,8 +10,10 @@ Type Chinese text and see it rendered with English glosses in real-time.
 
 ## Features
 
-- **~8,000 character glosses** — sourced from [CC-CEDICT](https://cc-cedict.org/), filtered by frequency for the most common characters
-- **50,000+ ligature compounds** — multi-character words render as single glosses (日本→Japan, 图书馆→library, 北京→Beijing)
+Note that these sizes had to be lowered to be able to be served on the web
+
+- **~8,000+ character glosses** — sourced from [CC-CEDICT](https://cc-cedict.org/), filtered by frequency for the most common characters
+- **30,000+ ligature compounds** — multi-character words render as single glosses (日本→Japan, 图书馆→library, 北京→Beijing)
 - **Parallel glyph generation** — uses all CPU cores to build the font quickly
 - **Fallback rendering** — unsupported characters display normally
 
