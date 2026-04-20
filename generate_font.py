@@ -23,7 +23,7 @@ FREQUENCY_URL = (
 FREQUENCY_FILE = Path("hanzi_db.csv")
 
 # Max glyphs must be under 65535 (OpenType limit)
-MAX_GLYPHS = 60000 / 2  # divide by 2 because we're getting OOM
+MAX_GLYPHS = 60000 // 2  # divide by 2 because we're getting OOM
 
 UNITS_PER_EM = 1000
 ASCENDER = 800
