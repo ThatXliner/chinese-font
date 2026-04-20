@@ -222,8 +222,11 @@ def pick_best_gloss(definitions: list[str]) -> str | None:
         if (
             d
             and len(d) <= 25
-            and not d.startswith("variant of")
             and not d.startswith("see ")
+            and "variant of" not in d
+            and "surname" not in d
+            and "slang" not in d
+            and d.isalnum()
         ):
             candidates.append(d)
 
