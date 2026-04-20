@@ -1,301 +1,459 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Literal Chinese Font</title>
-    <style>
-        @font-face {
-            font-family: 'Literal Chinese';
-            src: url('literal_chinese.woff2') format('woff2'),
-                 url('literal_chinese.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Literal Chinese Font</title>
+        <style>
+            @font-face {
+                font-family: "Literal Chinese";
+                /*src: url('literal_chinese.woff2') format('woff2'),*/
+                src: url("literal_chinese.ttf") format("truetype");
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
 
-        * {
-            box-sizing: border-box;
-        }
+            * {
+                box-sizing: border-box;
+            }
 
-        body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 3rem 2rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-            line-height: 1.6;
-        }
-
-        .container {
-            background: white;
-            border-radius: 16px;
-            padding: 3rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            color: #666;
-            margin-bottom: 2.5rem;
-            font-size: 1.1rem;
-        }
-
-        .literal-font {
-            font-family: 'Literal Chinese', system-ui, sans-serif;
-            font-size: 3rem;
-            line-height: 1.8;
-            letter-spacing: 0.15em;
-            font-feature-settings: "liga" 1, "calt" 1;
-            font-variant-ligatures: common-ligatures;
-        }
-
-        section {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        h2 {
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: #64748b;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-            font-weight: 600;
-        }
-
-        .example {
-            margin-bottom: 2rem;
-            padding-bottom: 2rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .example:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
-        .original {
-            font-size: 1.5rem;
-            color: #334155;
-            margin-bottom: 0.75rem;
-            font-weight: 500;
-        }
-
-        .translated {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            overflow-x: auto;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 1.25rem;
-            font-size: 1.5rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            resize: vertical;
-            min-height: 100px;
-            font-family: system-ui, sans-serif;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        #output {
-            margin-top: 1rem;
-            background: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            min-height: 100px;
-            border-left: 4px solid #667eea;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            overflow-x: auto;
-        }
-
-        .note {
-            font-size: 0.875rem;
-            color: #94a3b8;
-            margin-top: 0.75rem;
-        }
-
-        .legend {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 1rem;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            background: white;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-
-        .legend-char {
-            font-size: 1.25rem;
-            font-weight: 500;
-            color: #334155;
-        }
-
-        .legend-arrow {
-            color: #cbd5e1;
-        }
-
-        .legend-gloss {
-            font-family: 'Literal Chinese', system-ui;
-            font-size: 2rem;
-            font-feature-settings: "liga" 1, "calt" 1;
-            font-variant-ligatures: common-ligatures;
-        }
-
-        @media (max-width: 640px) {
             body {
-                padding: 1rem;
+                font-family:
+                    "Inter",
+                    system-ui,
+                    -apple-system,
+                    sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 3rem 2rem;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                color: #333;
+                line-height: 1.6;
             }
+
             .container {
-                padding: 1.5rem;
+                background: white;
+                border-radius: 16px;
+                padding: 3rem;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             }
+
             h1 {
-                font-size: 1.75rem;
+                font-size: 2.5rem;
+                margin-bottom: 0.5rem;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
             }
+
+            .subtitle {
+                color: #666;
+                margin-bottom: 2.5rem;
+                font-size: 1.1rem;
+            }
+
             .literal-font {
-                font-size: 2rem;
+                font-family: "Literal Chinese", system-ui, sans-serif;
+                font-size: 3rem;
+                line-height: 1.8;
+                letter-spacing: 0.15em;
+                font-feature-settings:
+                    "liga" 1,
+                    "calt" 1;
+                font-variant-ligatures: common-ligatures;
             }
+
+            section {
+                background: #f8fafc;
+                border-radius: 12px;
+                padding: 2rem;
+                margin-bottom: 2rem;
+                border: 1px solid #e2e8f0;
+            }
+
+            h2 {
+                font-size: 0.875rem;
+                text-transform: uppercase;
+                letter-spacing: 0.15em;
+                color: #64748b;
+                margin-top: 0;
+                margin-bottom: 1.5rem;
+                font-weight: 600;
+            }
+
+            .example {
+                margin-bottom: 2rem;
+                padding-bottom: 2rem;
+                border-bottom: 1px solid #e2e8f0;
+            }
+
+            .example:last-child {
+                margin-bottom: 0;
+                padding-bottom: 0;
+                border-bottom: none;
+            }
+
+            .original {
+                font-size: 1.5rem;
+                color: #334155;
+                margin-bottom: 0.75rem;
+                font-weight: 500;
+            }
+
+            .translated {
+                background: white;
+                padding: 1.5rem;
+                border-radius: 8px;
+                border-left: 4px solid #667eea;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+                overflow-x: auto;
+            }
+
+            textarea {
+                width: 100%;
+                padding: 1.25rem;
+                font-size: 1.5rem;
+                border: 2px solid #e2e8f0;
+                border-radius: 8px;
+                resize: vertical;
+                min-height: 100px;
+                font-family: system-ui, sans-serif;
+                transition:
+                    border-color 0.2s,
+                    box-shadow 0.2s;
+            }
+
+            textarea:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+            #output {
+                margin-top: 1rem;
+                background: white;
+                padding: 1.5rem;
+                border-radius: 8px;
+                min-height: 100px;
+                border-left: 4px solid #667eea;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+                overflow-x: auto;
+            }
+
+            .note {
+                font-size: 0.875rem;
+                color: #94a3b8;
+                margin-top: 0.75rem;
+            }
+
             .legend {
-                grid-template-columns: 1fr;
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 1rem;
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-    <h1>Literal Chinese Font</h1>
-    <p class="subtitle">A font that replaces Chinese characters with their English meanings · <a href="https://github.com/ThatXliner/chinese-font" style="color: #667eea; text-decoration: none;">GitHub</a></p>
 
-    <section>
-        <h2>Example Sentences</h2>
+            .legend-item {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                background: white;
+                padding: 0.75rem 1rem;
+                border-radius: 8px;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            }
 
-        <div class="example">
-            <div class="original">我去图书馆看书。</div>
-            <div class="translated literal-font">我去图书馆看书。</div>
+            .legend-char {
+                font-size: 1.25rem;
+                font-weight: 500;
+                color: #334155;
+            }
+
+            .legend-arrow {
+                color: #cbd5e1;
+            }
+
+            .legend-gloss {
+                font-family: "Literal Chinese", system-ui;
+                font-size: 2rem;
+                font-feature-settings:
+                    "liga" 1,
+                    "calt" 1;
+                font-variant-ligatures: common-ligatures;
+            }
+
+            @media (max-width: 640px) {
+                body {
+                    padding: 1rem;
+                }
+                .container {
+                    padding: 1.5rem;
+                }
+                h1 {
+                    font-size: 1.75rem;
+                }
+                .literal-font {
+                    font-size: 2rem;
+                }
+                .legend {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Literal Chinese Font</h1>
+            <p class="subtitle">
+                A font that replaces Chinese characters with their English
+                meanings ·
+                <a
+                    href="https://github.com/ThatXliner/chinese-font"
+                    style="color: #667eea; text-decoration: none"
+                    >GitHub</a
+                >
+            </p>
+
+            <section>
+                <h2>Example Sentences</h2>
+
+                <div class="example">
+                    <div class="original">我去图书馆看书。</div>
+                    <div class="translated literal-font">我去图书馆看书。</div>
+                </div>
+
+                <div class="example">
+                    <div class="original">火山在日本很多。</div>
+                    <div class="translated literal-font">火山在日本很多。</div>
+                </div>
+
+                <div class="example">
+                    <div class="original">北京和上海是中国大城市。</div>
+                    <div class="translated literal-font">
+                        北京和上海是中国大城市。
+                    </div>
+                </div>
+
+                <div class="example">
+                    <div class="original">学生在大学学中文。</div>
+                    <div class="translated literal-font">
+                        学生在大学学中文。
+                    </div>
+                </div>
+
+                <div class="example">
+                    <div class="original">我的朋友喜欢山水画。</div>
+                    <div class="translated literal-font">
+                        我的朋友喜欢山水画。
+                    </div>
+                </div>
+
+                <div class="example">
+                    <div class="original">父母爱子女，子女爱父母。</div>
+                    <div class="translated literal-font">
+                        父母爱子女，子女爱父母。
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Ligature Examples</h2>
+                <p class="note">
+                    These compound words are rendered as single glosses:
+                </p>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-char">火山</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">火山</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">日本</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">日本</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">图书馆</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">图书馆</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">电话</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">电话</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">中文</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">中文</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">北京</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">北京</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">上海</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">上海</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">大学</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">大学</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">学生</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">学生</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">朋友</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">朋友</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">山水</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">山水</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">父母</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">父母</span>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Try It Yourself</h2>
+                <textarea id="input" placeholder="Type Chinese text here...">
+人山人海，天上有日月。</textarea
+                >
+                <div id="output" class="literal-font"></div>
+                <p class="note">Unsupported characters will display as-is.</p>
+            </section>
+
+            <section>
+                <h2>Supported Characters</h2>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-char">人</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">人</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">山</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">山</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">火</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">火</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">水</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">水</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">日</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">日</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">月</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">月</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">木</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">木</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">口</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">口</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">手</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">手</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">心</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">心</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">天</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">天</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">地</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">地</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">风</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">风</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">雨</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">雨</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">云</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">云</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">大</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">大</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">小</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">小</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">上</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">上</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">下</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">下</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-char">中</span>
+                        <span class="legend-arrow">→</span>
+                        <span class="legend-gloss">中</span>
+                    </div>
+                </div>
+                <p class="note">...and 76 more characters</p>
+            </section>
+
+            <script>
+                const input = document.getElementById("input");
+                const output = document.getElementById("output");
+
+                function updateOutput() {
+                    output.textContent = input.value;
+                }
+
+                input.addEventListener("input", updateOutput);
+                updateOutput();
+            </script>
         </div>
-
-        <div class="example">
-            <div class="original">火山在日本很多。</div>
-            <div class="translated literal-font">火山在日本很多。</div>
-        </div>
-
-        <div class="example">
-            <div class="original">北京和上海是中国大城市。</div>
-            <div class="translated literal-font">北京和上海是中国大城市。</div>
-        </div>
-
-        <div class="example">
-            <div class="original">学生在大学学中文。</div>
-            <div class="translated literal-font">学生在大学学中文。</div>
-        </div>
-
-        <div class="example">
-            <div class="original">我的朋友喜欢山水画。</div>
-            <div class="translated literal-font">我的朋友喜欢山水画。</div>
-        </div>
-
-        <div class="example">
-            <div class="original">父母爱子女，子女爱父母。</div>
-            <div class="translated literal-font">父母爱子女，子女爱父母。</div>
-        </div>
-    </section>
-
-    <section>
-        <h2>Ligature Examples</h2>
-        <p class="note">These compound words are rendered as single glosses:</p>
-        <div class="legend">
-            <div class="legend-item"><span class="legend-char">火山</span> <span class="legend-arrow">→</span> <span class="legend-gloss">火山</span></div>
-            <div class="legend-item"><span class="legend-char">日本</span> <span class="legend-arrow">→</span> <span class="legend-gloss">日本</span></div>
-            <div class="legend-item"><span class="legend-char">图书馆</span> <span class="legend-arrow">→</span> <span class="legend-gloss">图书馆</span></div>
-            <div class="legend-item"><span class="legend-char">电话</span> <span class="legend-arrow">→</span> <span class="legend-gloss">电话</span></div>
-            <div class="legend-item"><span class="legend-char">中文</span> <span class="legend-arrow">→</span> <span class="legend-gloss">中文</span></div>
-            <div class="legend-item"><span class="legend-char">北京</span> <span class="legend-arrow">→</span> <span class="legend-gloss">北京</span></div>
-            <div class="legend-item"><span class="legend-char">上海</span> <span class="legend-arrow">→</span> <span class="legend-gloss">上海</span></div>
-            <div class="legend-item"><span class="legend-char">大学</span> <span class="legend-arrow">→</span> <span class="legend-gloss">大学</span></div>
-            <div class="legend-item"><span class="legend-char">学生</span> <span class="legend-arrow">→</span> <span class="legend-gloss">学生</span></div>
-            <div class="legend-item"><span class="legend-char">朋友</span> <span class="legend-arrow">→</span> <span class="legend-gloss">朋友</span></div>
-            <div class="legend-item"><span class="legend-char">山水</span> <span class="legend-arrow">→</span> <span class="legend-gloss">山水</span></div>
-            <div class="legend-item"><span class="legend-char">父母</span> <span class="legend-arrow">→</span> <span class="legend-gloss">父母</span></div>
-        </div>
-    </section>
-
-    <section>
-        <h2>Try It Yourself</h2>
-        <textarea id="input" placeholder="Type Chinese text here...">人山人海，天上有日月。</textarea>
-        <div id="output" class="literal-font"></div>
-        <p class="note">Unsupported characters will display as-is.</p>
-    </section>
-
-    <section>
-        <h2>Supported Characters</h2>
-        <div class="legend">
-            <div class="legend-item"><span class="legend-char">人</span> <span class="legend-arrow">→</span> <span class="legend-gloss">人</span></div>
-            <div class="legend-item"><span class="legend-char">山</span> <span class="legend-arrow">→</span> <span class="legend-gloss">山</span></div>
-            <div class="legend-item"><span class="legend-char">火</span> <span class="legend-arrow">→</span> <span class="legend-gloss">火</span></div>
-            <div class="legend-item"><span class="legend-char">水</span> <span class="legend-arrow">→</span> <span class="legend-gloss">水</span></div>
-            <div class="legend-item"><span class="legend-char">日</span> <span class="legend-arrow">→</span> <span class="legend-gloss">日</span></div>
-            <div class="legend-item"><span class="legend-char">月</span> <span class="legend-arrow">→</span> <span class="legend-gloss">月</span></div>
-            <div class="legend-item"><span class="legend-char">木</span> <span class="legend-arrow">→</span> <span class="legend-gloss">木</span></div>
-            <div class="legend-item"><span class="legend-char">口</span> <span class="legend-arrow">→</span> <span class="legend-gloss">口</span></div>
-            <div class="legend-item"><span class="legend-char">手</span> <span class="legend-arrow">→</span> <span class="legend-gloss">手</span></div>
-            <div class="legend-item"><span class="legend-char">心</span> <span class="legend-arrow">→</span> <span class="legend-gloss">心</span></div>
-            <div class="legend-item"><span class="legend-char">天</span> <span class="legend-arrow">→</span> <span class="legend-gloss">天</span></div>
-            <div class="legend-item"><span class="legend-char">地</span> <span class="legend-arrow">→</span> <span class="legend-gloss">地</span></div>
-            <div class="legend-item"><span class="legend-char">风</span> <span class="legend-arrow">→</span> <span class="legend-gloss">风</span></div>
-            <div class="legend-item"><span class="legend-char">雨</span> <span class="legend-arrow">→</span> <span class="legend-gloss">雨</span></div>
-            <div class="legend-item"><span class="legend-char">云</span> <span class="legend-arrow">→</span> <span class="legend-gloss">云</span></div>
-            <div class="legend-item"><span class="legend-char">大</span> <span class="legend-arrow">→</span> <span class="legend-gloss">大</span></div>
-            <div class="legend-item"><span class="legend-char">小</span> <span class="legend-arrow">→</span> <span class="legend-gloss">小</span></div>
-            <div class="legend-item"><span class="legend-char">上</span> <span class="legend-arrow">→</span> <span class="legend-gloss">上</span></div>
-            <div class="legend-item"><span class="legend-char">下</span> <span class="legend-arrow">→</span> <span class="legend-gloss">下</span></div>
-            <div class="legend-item"><span class="legend-char">中</span> <span class="legend-arrow">→</span> <span class="legend-gloss">中</span></div>
-        </div>
-        <p class="note">...and 76 more characters</p>
-    </section>
-
-    <script>
-        const input = document.getElementById('input');
-        const output = document.getElementById('output');
-
-        function updateOutput() {
-            output.textContent = input.value;
-        }
-
-        input.addEventListener('input', updateOutput);
-        updateOutput();
-    </script>
-    </div>
-</body>
+    </body>
 </html>
