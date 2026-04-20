@@ -171,7 +171,7 @@ def parse_cedict(
 
             traditional, simplified, _pinyin, definitions = match.groups()
 
-            defs = definitions.split("/")
+            defs = definitions.split("/")[:2]
             gloss = pick_best_gloss(defs)
             if not gloss:
                 continue
