@@ -157,6 +157,15 @@ def parse_cedict(
     Characters are filtered and sorted by frequency if freq_data is provided.
     """
     single_chars: dict[str, str] = {}
+    with open(FREQUENCY_FILE, encoding="utf-8") as f:
+        for i, line in enumerate(f):
+            if i == 0:
+                continue
+            character = line.strip().split(",")[1]
+            definition = line.strip().split(",")[3].strip('"')
+            clean_definitions = re.sub(r";.+", "", definition).split(",")
+            assert len(clean_definitions) <= 1
+            single_chars[character] = clean_definitions[0]
     ligatures: dict[tuple[str, ...], str] = {}
 
     with open(CEDICT_FILE, encoding="utf-8") as f:
@@ -178,18 +187,17 @@ def parse_cedict(
 
             for chars in [simplified, traditional]:
                 if len(chars) == 1:
-                    # Only include characters in our frequency list (if we have one)
-                    if freq_data and chars not in freq_data:
-                        continue
-                    if chars not in single_chars:
-                        single_chars[chars] = gloss
+                    # We will parse single-char definitions using the hanzi_db
+                    continue
                 else:
                     # For ligatures, all component chars must be in frequency list
                     if freq_data and not all(c in freq_data for c in chars):
                         continue
                     key = tuple(chars)
-                    if key not in ligatures:
-                        ligatures[key] = gloss
+                    # Use last definition (the first ones tend to be names)
+                    ligatures[key] = gloss
+                    # elif ligatures[key] != gloss:
+                    #     print("DUPE!!!", key, ligatures[key], gloss)
 
     # Sort single chars by frequency (most common first)
     if freq_data:
