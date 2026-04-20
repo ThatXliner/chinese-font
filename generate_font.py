@@ -226,7 +226,7 @@ def pick_best_gloss(definitions: list[str]) -> str | None:
         d = re.sub(r"\s*\[[^\]]*\]", "", d)
         d = re.sub(r"\s*\{[^}]*\}", "", d)
         d = d.split(";")[0].split(",")[0].strip()
-        d = re.sub(r"^(to|a|an|the)\s+", "", d, flags=re.IGNORECASE)
+        # d = re.sub(r"^(to|a|an|the)\s+", "", d, flags=re.IGNORECASE)
         if (
             d
             and len(d) <= 25
