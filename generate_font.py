@@ -13,13 +13,17 @@ from fontTools.ttLib import newTable
 from fontTools.ttLib.tables import otTables
 from PIL import Image, ImageDraw, ImageFont
 
-CEDICT_URL = "https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz"
+CEDICT_URL = (
+    "https://www.mdbg.net/chinese/export/cedict/cedict_1_0_ts_utf-8_mdbg.txt.gz"
+)
 CEDICT_FILE = Path("cedict.txt")
-FREQUENCY_URL = "https://raw.githubusercontent.com/ruddfawcett/hanziDB.csv/master/hanzi_db.csv"
+FREQUENCY_URL = (
+    "https://raw.githubusercontent.com/ruddfawcett/hanziDB.csv/master/hanzi_db.csv"
+)
 FREQUENCY_FILE = Path("hanzi_db.csv")
 
 # Max glyphs must be under 65535 (OpenType limit)
-MAX_GLYPHS = 60000
+MAX_GLYPHS = 60000 / 2  # divide by 2 because we're getting OOM
 
 UNITS_PER_EM = 1000
 ASCENDER = 800
@@ -215,7 +219,12 @@ def pick_best_gloss(definitions: list[str]) -> str | None:
         d = re.sub(r"\s*\{[^}]*\}", "", d)
         d = d.split(";")[0].split(",")[0].strip()
         d = re.sub(r"^(to|a|an|the)\s+", "", d, flags=re.IGNORECASE)
-        if d and len(d) <= 25 and not d.startswith("variant of") and not d.startswith("see "):
+        if (
+            d
+            and len(d) <= 25
+            and not d.startswith("variant of")
+            and not d.startswith("see ")
+        ):
             candidates.append(d)
 
     if not candidates:
@@ -440,13 +449,15 @@ def build_font():
         max_ligatures = MAX_GLYPHS - len(char_glosses) - 2
         if max_ligatures < 0:
             # Even chars alone exceed limit - truncate chars too
-            char_glosses = dict(list(char_glosses.items())[:MAX_GLYPHS - 2])
+            char_glosses = dict(list(char_glosses.items())[: MAX_GLYPHS - 2])
             ligatures = {}
             print(f"Truncated to {len(char_glosses)} characters (OpenType limit)")
         else:
             # Truncate ligatures to fit
             ligatures = dict(list(ligatures.items())[:max_ligatures])
-            print(f"Truncated to {len(char_glosses)} chars + {len(ligatures)} ligatures (OpenType limit)")
+            print(
+                f"Truncated to {len(char_glosses)} chars + {len(ligatures)} ligatures (OpenType limit)"
+            )
 
     glyph_names = [".notdef", "space"]
     char_strings = {}
@@ -488,8 +499,7 @@ def build_font():
     with ProcessPoolExecutor(max_workers=num_workers) as executor:
         # Submit character work
         char_futures = {
-            executor.submit(render_glyph, gn, gl): cp
-            for gn, gl, cp in char_work
+            executor.submit(render_glyph, gn, gl): cp for gn, gl, cp in char_work
         }
 
         # Submit ligature work
