@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """Generate a Chinese literal-meaning font using CC-CEDICT dictionary."""
 
+import gzip
 import os
 import re
-import subprocess
+import ssl
+from urllib.request import urlopen
+
+import certifi
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
@@ -112,11 +116,10 @@ def download_cedict():
     if CEDICT_FILE.exists():
         return
     print("Downloading CC-CEDICT...")
-    subprocess.run(
-        f'curl -sL "{CEDICT_URL}" | gunzip > {CEDICT_FILE}',
-        shell=True,
-        check=True,
-    )
+    context = ssl.create_default_context(cafile=certifi.where())
+    with urlopen(CEDICT_URL, context=context, timeout=60) as response:
+        data = gzip.decompress(response.read())
+    CEDICT_FILE.write_bytes(data)
 
 
 def download_frequency_data():
@@ -124,11 +127,10 @@ def download_frequency_data():
     if FREQUENCY_FILE.exists():
         return
     print("Downloading frequency data...")
-    subprocess.run(
-        f'curl -sL "{FREQUENCY_URL}" -o {FREQUENCY_FILE}',
-        shell=True,
-        check=True,
-    )
+    context = ssl.create_default_context(cafile=certifi.where())
+    with urlopen(FREQUENCY_URL, context=context, timeout=60) as response:
+        data = response.read()
+    FREQUENCY_FILE.write_bytes(data)
 
 
 def load_frequency_data() -> dict[str, int]:
