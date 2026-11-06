@@ -21,6 +21,12 @@ Compound words like 火山 render as "volcano" instead of "fire mountain" using 
 
 Type Chinese text and see it rendered with English glosses in real-time.
 
+| You type | You see |
+|---|---|
+| 我去图书馆看书。 | I go library read. |
+| 火山在日本很多。 | volcano at Japan very many. |
+| 父母爱子女，子女爱父母。 | parents love children, children love parents. |
+
 ## Features
 
 Note that these sizes had to be lowered significantly to be able to be served on the web. Update the MAX_GLYPHS variable in the font-generation code to increase the capability.
