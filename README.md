@@ -1,6 +1,14 @@
-# Literal Chinese Font
+<h1 align="center">Literal Chinese Font</h1>
 
-A font that replaces Chinese characters with their English meanings. Compound words like 火山 render as "volcano" instead of "fire mountain" using OpenType ligatures.
+<p align="center"><strong>A font that replaces Chinese characters with their English meanings.</strong><br>
+Compound words like 火山 render as "volcano" instead of "fire mountain" using OpenType ligatures.</p>
+
+<p align="center">
+  <a href="https://thatxliner.github.io/chinese-font/"><img alt="Try it live" src="https://img.shields.io/badge/try%20it-live-667eea"></a>
+  <img alt="~6,000 characters" src="https://img.shields.io/badge/characters-~6%2C000-764ba2">
+  <img alt="10,000+ ligature compounds" src="https://img.shields.io/badge/ligatures-10%2C000%2B-764ba2">
+  <a href="LICENSE"><img alt="License: Unlicense" src="https://img.shields.io/badge/license-Unlicense-475569"></a>
+</p>
 
 ## Demo
 
