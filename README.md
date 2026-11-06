@@ -11,8 +11,8 @@ Compound words like 火山 render as "volcano" instead of "fire mountain" using 
 </p>
 
 <p align="center">
-  <a href="brag-output/brag.mp4"><img src="brag-output/brag.jpg" alt="Watch the 20-second video: 我去图书馆看书 rendered as 'I go library read'" width="720"></a>
-  <br><sub><a href="brag-output/brag.mp4">▶ Watch the 20-second video</a></sub>
+  <a href="https://youtu.be/UP2q4Y7s_7g"><img src="brag-output/brag.jpg" alt="Watch the 20-second video: 我去图书馆看书 rendered as 'I go library read'" width="720"></a>
+  <br><sub><a href="https://youtu.be/UP2q4Y7s_7g">▶ Watch on YouTube</a></sub>
 </p>
 
 ## Demo
