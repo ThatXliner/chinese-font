@@ -10,6 +10,11 @@ Compound words like 火山 render as "volcano" instead of "fire mountain" using 
   <a href="LICENSE"><img alt="License: Unlicense" src="https://img.shields.io/badge/license-Unlicense-475569"></a>
 </p>
 
+<p align="center">
+  <a href="brag-output/brag.mp4"><img src="brag-output/brag.jpg" alt="Watch the 20-second video: 我去图书馆看书 rendered as 'I go library read'" width="720"></a>
+  <br><sub><a href="brag-output/brag.mp4">▶ Watch the 20-second video</a></sub>
+</p>
+
 ## Demo
 
 [**Try it live →**](https://thatxliner.github.io/chinese-font/)
